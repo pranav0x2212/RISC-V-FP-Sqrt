@@ -52,20 +52,9 @@ module fp_sqrt (
   negative subnormals) is invalid and gives the canonical NaN. The result of a square root is never subnormal, but a subnormal
   **operand** must be handled (normalise it first).
 
-### What is checked
+### What the CI checks
 
-About 8,000 operations: 24 corner values, then constrained-random operands (random bit patterns with a few negatives, subnormals,
-short mantissas, exponents around 1.0 and at the ends of the range, and exact squares such as `k*k` scaled by even powers of two).
-Every result must match bit for bit.
-
-### Hints
-
-* Make the exponent even (shift the significand by one when the unbiased exponent is odd), then take the integer square root of the
-  significand scaled up by a large even power of two (a bit-by-bit / digit-recurrence root takes about one cycle per result bit).
-* Keep at least 26 result bits and use "remainder is non-zero" as a sticky bit; an exact square gives an exact result.
-* Yosys 0.33 (the CI synthesizer) cannot parse assignment patterns (`'{default: 0}`), and `small` is a reserved word.
-
-### Interface
+CI runs about 8,000 operations (corner cases and constrained-random operands) and compares every result bit for bit.
 
 > [!IMPORTANT]
-> Your module, port and parameter names are up to you. Your design must have the same number of ports, with the same directions and widths, as shown above, and must behave as specified. Map your names to this spec in `rnr-stage.yaml` (see the assignment handout).
+> Your module and port names are up to you, but the port count, directions, widths and behavior must match this spec. If your names differ, map them in `rnr-stage.yaml`.
